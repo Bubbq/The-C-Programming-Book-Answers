@@ -1,5 +1,5 @@
 all:
-	gcc CH4/main.c -o run -lm -Wall
+	gcc CH5/main.c -o run -lm -Wall
 
 clean:
 	rm run	
