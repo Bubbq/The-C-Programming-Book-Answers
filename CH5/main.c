@@ -184,52 +184,6 @@ void reverse(char* s)
     }
 }
 
-void swap(char** ptrs, int i, int j) {
-    char* tmp = ptrs[i];
-    ptrs[i] = ptrs[j];
-    ptrs[j] = tmp;
-}
-
-int pivot(char** ptrs, int start, int end)
-{
-    int i = start - 1;
-    char* s = ptrs[end];
-
-    for (int j = start; j < end; j++)
-    { 
-        if(strcmp(ptrs[j], s) < 0)
-        {
-            i++;
-            swap(ptrs, i, j);
-        }
-    }
-
-    swap(ptrs, i + 1, end);
-    return i; 
-}
-
-void quicksort(char** ptrs, int start, int end)
-{
-    // base case
-    if (start >= end) return;
-
-    int p = pivot(ptrs, start, end);
-    quicksort(ptrs, start, p - 1);
-    quicksort(ptrs, p + 1, end);
-}
-
-void sortLines(char lines[LIMIT][LIMIT], int n)
-{
-    // an array of ptrs that point to the 1st char for n lines
-    char* ptrs[n];
-
-    // assign each ptr to a seperate string
-    for(int i = 0; i < n; i++) ptrs[i] = lines[i];
-    quicksort(ptrs, 0, (n - 1));
-
-    for(int i = 0; i < n; i++) printf("%s\n", ptrs[i]);
-}
-
 int dayOfYear(int y, int m, int d)
 {
     int calender[][13] = 
@@ -279,11 +233,74 @@ int reversePolish(int argc, char* argv[])
     return ret;
 }
 
+int compareNum(char* a, char* b, bool reverse)
+{
+    float v1 = atof(a);
+    float v2 = atof(b);
+
+    if(v1 < v2) return -1;
+    else if(v1 > v2) return 1;
+    else return 0;
+}
+
+void swapElement(void** base, int i, int j)
+{
+    void* t = base[i];
+    base[i] = base[j];
+    base[j] = t;
+}
+
+int partition(void** base, int s, int e, int(*compare)(void*, void*), bool reverse)
+{
+    int i = s - 1;
+    for(int j = s; j < e; j++)
+    {
+        int cv = compare(base[j], base[e]);
+
+        if(reverse && (cv > 0)) swapElement(base, ++i, j);
+        else if(cv < 0) swapElement(base, ++i, j);
+    }
+
+    swapElement(base, i + 1, e);
+
+    return i;
+}
+
+void quicksort(void** base, int s, int e, int(*compare)(void*, void*), bool reverse)
+{
+    // base case
+    if(s >= e) return;
+
+    // split the unsorted list in random sizes
+    int p = partition(base, s, e, compare, reverse);
+
+    // sort left and right recursivley
+    quicksort(base, s, p - 1, compare, reverse);
+    quicksort(base, p + 1, e, compare, reverse);
+}
+
+void sortLines(void** lines, char* op, int n)
+{
+    bool r;
+    int (*cmp)(void*, void*);
+
+    for(int i = 1; i < strlen(op); i++)
+    {
+        if (op[i] == 'r') r = true;
+        else if (op[i] == 'a') cmp = (int(*)(void*, void*))strcmp;
+        else if (op[i] == 'n') cmp = (int(*)(void*, void*))compareNum;
+    }
+
+    quicksort((void**)lines, 0, n, (int(*)(void*, void*))cmp, r);
+
+    for(int i = 0; i < (n + 1); i++) printf("%s\n", (char*)lines[i]);
+}
+
 int main(int argc, char* argv[])
 {
     // void (*e5_3)(char*, char*) = concat;
     // bool (*e5_4)(char*, char*) = strend;
-    // void (*e5_7)(char*[LIMIT], int) = sortLines;
+    // void (*e5_7)(void**, char*, int) = sortLines;
     // int (*e5_8)(int, int, int) = dayOfYear;
     // int (*e5_11)(int, char*[]) = reversePolish;
     // e5_3("", "");
@@ -291,6 +308,5 @@ int main(int argc, char* argv[])
     // e5_7((char){"", "", ""}, 3);
     // e5_8(0, 0, 0);
     // e5_11(0, {"", "", ""});
-    
     return 0;
 }
