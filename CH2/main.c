@@ -121,7 +121,7 @@ void lower(char arr[MAX])
 
 int main()
 {
-    // double (*e2_2)(char[MAX], int) = htoi;
+    double (*e2_2)(char[MAX], int) = htoi;
     // void (*e2_4)(char[MAX], char[MAX]) = squeeze;
     // int (*e2_5)(char[MAX], char[MAX]) = any;
     // unsigned (*e2_6)(int, int, int, int) = setbits;
@@ -129,7 +129,7 @@ int main()
     // unsigned (*e2_8)(int, int) = rotate;
     // int (*e2_9)(unsigned) = countbits;
     // void (*e2_10)(char[MAX]) = lower;
-    // e2_2("", 0);
+    e2_2("", 0);
     // e2_4("", "");
     // e2_5("", "");
     // e2_6(0,0,0,0);

@@ -1,5 +1,8 @@
+#include <math.h>
 #include <stdio.h>
+#include <limits.h>
 #include <string.h>
+#include <stdbool.h>
 
 #define CHAR_LIMIT 1024
 
@@ -272,6 +275,77 @@ void e1_19()
     }
 }
 
+# define TAB 8
+
+void e1_20()
+{
+    int c;
+    int pos = 1;
+    
+    while((c = getchar()) != EOF)
+    {
+        if(c == '\t')
+        {
+            int nb = TAB - ((pos - 1) % TAB);
+            while(nb > 0)
+            {
+                putchar(' ');
+                nb--;
+                pos++;
+            }
+        }
+
+        else if(c == '\n')
+        {
+            putchar(c); 
+            pos = 1;
+        }
+
+        else
+        {
+            putchar(c);
+            pos++;
+        }
+    }
+}
+
+void e_21(){}
+void e_22(){}
+void e_23(){}
+void e_24(){}
+
+// Chapter 2 - Types, Operators, and Expressions
+
+void e2_1()
+{
+    printf("char: %d to %d\n", CHAR_MIN, CHAR_MAX);
+    printf("short: %d to %d\n", SHRT_MIN, SHRT_MAX);
+    printf("int: %d to %d\n", INT_MIN, INT_MAX);
+}
+
+void e2_2()
+{
+    bool iterate = true;
+    int i = 0;
+    int c;
+
+    while(iterate)
+    {
+        if(i >= CHAR_LIMIT - 1) iterate = false;
+        
+        c = getchar();
+        if(c == '\n') iterate = false;
+        else if(c == EOF) iterate = false;
+    }
+}
+
+int e2_3(char* hex)
+{
+    int sum = 0;
+    for(int i = 0; i < strlen(hex); i++) sum += (hex[i] - '0') * (pow(16, (strlen(hex)) - (i + 1)));
+    return sum;
+}
+
 int main()
 {
     // e1_1();
@@ -293,5 +367,9 @@ int main()
     // e1_17(80);
     // e1_18();
     // e1_19();
+    // e1_20();
+    // e2_1();
+    // e2_2();
+    // e2_3("123");
     return 0;
 }
