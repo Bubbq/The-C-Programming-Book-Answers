@@ -339,11 +339,48 @@ void e2_2()
     }
 }
 
-int e2_3(char* hex)
+int e2_3(const char* hex)
 {
     int sum = 0;
     for(int i = 0; i < strlen(hex); i++) sum += (hex[i] - '0') * (pow(16, (strlen(hex)) - (i + 1)));
     return sum;
+}
+
+void e2_4(char s1[CHAR_LIMIT], const char* s2)
+{
+    int j = 0;
+    
+    for(int i = 0; i < strlen(s1); i++)
+    {
+        bool add = true;
+        for(int k = 0; k < strlen(s2); k++) if(s1[i] == s2[k]) add = false;
+
+        if(add) s1[j++] = s1[i];
+    }
+
+    s1[j] = '\0';
+    printf("%s\n", s1);
+}
+
+int e2_5(const char* s1, const char* s2)
+{
+    for(int i = 0; i < strlen(s1); i++)
+    {
+        for(int j = 0; j < strlen(s2); j++)  if(s1[i] == s2[j]) return i;
+    }
+
+    return -1;
+}
+
+unsigned e2_6(int x, int y, int n,  int p)
+{
+    // clears pos p to p + n in x
+    unsigned l = ~((~(~0 << n)) << ((p + 1) - n));
+
+    // clears everything execpt bits 0 to n
+    unsigned k = ~(~0 << n);
+
+    return (x & l) | ((y & k) << ((p + 1) - n)); 
 }
 
 int main()
@@ -370,6 +407,9 @@ int main()
     // e1_20();
     // e2_1();
     // e2_2();
-    // e2_3("123");
+    // e2_3("hexadecimal");
+    // e2_4("s1", "s2");
+    // e2_5("s1", "s2");
+    // e2_6(0, 0, 0, 0);
     return 0;
 }
