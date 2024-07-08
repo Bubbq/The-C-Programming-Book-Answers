@@ -4,11 +4,11 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define CHAR_LIMIT 1024
+#define LIMIT 1024
 
 // Commonly used functions //
 
-int readLine(char line[CHAR_LIMIT])
+int readLine(char line[LIMIT])
 {
     int c;
     int i = 0;
@@ -17,14 +17,14 @@ int readLine(char line[CHAR_LIMIT])
     while((c = getchar()) != '\n')
     {
         size++;
-        if(i < CHAR_LIMIT) line[i++] = c;
+        if(i < LIMIT) line[i++] = c;
     }
 
-    line[(i < CHAR_LIMIT) ? i : CHAR_LIMIT] = '\0';
+    line[(i < LIMIT) ? i : LIMIT] = '\0';
     return size;
 }
 
-void cpystr(char src[CHAR_LIMIT], char dst[CHAR_LIMIT])
+void cpystr(char src[LIMIT], char dst[LIMIT])
 {
     int i = 0;
     
@@ -32,7 +32,7 @@ void cpystr(char src[CHAR_LIMIT], char dst[CHAR_LIMIT])
     dst[i] = '\0';
 }
 
-void reverse(char str[CHAR_LIMIT])
+void reverse(char str[LIMIT])
 {
     int n = strlen(str) - 1;
     for(int i = 0; i < ((n + 1) / 2); i++)
@@ -202,10 +202,10 @@ void e1_14()
 void e1_16()
 {
     int length;
-    char line[CHAR_LIMIT];
+    char line[LIMIT];
 
     int max = 0;
-    char longestLine[CHAR_LIMIT];
+    char longestLine[LIMIT];
 
     while((length = readLine(line)) > 0)
     {
@@ -222,7 +222,7 @@ void e1_16()
 void e1_17(int printlen)
 {
     int len;
-    char line[CHAR_LIMIT];
+    char line[LIMIT];
 
     while((len = readLine(line)) > 0) if(len > printlen) printf("\"%s\" has more than %d characters\n", line, printlen);
 }
@@ -230,7 +230,7 @@ void e1_17(int printlen)
 void e1_18()
 {
     int len;
-    char line[CHAR_LIMIT];
+    char line[LIMIT];
 
     while((len = readLine(line)) > 0)
     {
@@ -239,7 +239,7 @@ void e1_18()
         char lc = '\0';
         
         int idx = 0;
-        char fline[CHAR_LIMIT];
+        char fline[LIMIT];
 
         for(int i = 0; i < len; i++)
         {
@@ -266,7 +266,7 @@ void e1_18()
 void e1_19()
 {
     int len;
-    char line[CHAR_LIMIT];
+    char line[LIMIT];
 
     while((len = readLine(line) > 0))
     {
@@ -331,7 +331,7 @@ void e2_2()
 
     while(iterate)
     {
-        if(i >= CHAR_LIMIT - 1) iterate = false;
+        if(i >= LIMIT - 1) iterate = false;
         
         c = getchar();
         if(c == '\n') iterate = false;
@@ -346,7 +346,7 @@ int e2_3(const char* hex)
     return sum;
 }
 
-void e2_4(char s1[CHAR_LIMIT], const char* s2)
+void e2_4(char s1[LIMIT], const char* s2)
 {
     int j = 0;
     
@@ -383,6 +383,55 @@ unsigned e2_6(int x, int y, int n,  int p)
     return (x & l) | ((y & k) << ((p + 1) - n)); 
 }
 
+unsigned e2_7(int x, int p, int n)
+{
+    // extracts the portion we want to inverse 
+    unsigned k = ~0 << p;
+
+    // return the x with range p to p + n empty, and OR it with p to p + n inversed, retaining all other bits
+    return ((x & ~k) | (~(x & k) & k));
+}
+
+// number of bits in unsigned int
+#define WORDLENGTH 32
+
+unsigned e2_8(int x, int n)
+{
+    unsigned k = ~0 >> (WORDLENGTH - n);
+
+    return ((x >> n) | (x & k) << (WORDLENGTH - n));
+}
+
+int e2_9(int x)
+{
+    int count = 0;
+    for(unsigned int one = 1; x != 0; x >>= 1) if((x & one) == one) count++;
+    return count;
+}
+
+void e2_10(char word[LIMIT])
+{
+    for(int i = 0; i < strlen(word); i++) word[i] += ((word[i] >= 65) && (word[i] <= 90)) ? 32 : 0;
+}
+
+// Chapter 3 - Control Flow
+
+int e3_1(int list[LIMIT], int x, int n)
+{
+    int low = 0; 
+    int high = n - 1;
+    int mid = (high + low) / 2;
+
+    while(low <= high && (x != list[mid]))
+    {
+        if(x > list[mid]) low = mid + 1;
+        else high = mid - 1;
+    }
+
+    if(x == list[mid]) return mid;
+    else return -1;
+}
+
 int main()
 {
     // e1_1();
@@ -411,5 +460,10 @@ int main()
     // e2_4("s1", "s2");
     // e2_5("s1", "s2");
     // e2_6(0, 0, 0, 0);
+    // e2_7(0, 0, 0);
+    // e2_8(0, 0);
+    // e2_8(0, 0);
+    // e2_9(0);
+    // e2_10("");
     return 0;
 }
