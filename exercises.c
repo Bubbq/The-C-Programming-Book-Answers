@@ -432,38 +432,72 @@ int e3_1(int list[LIMIT], int x, int n)
     else return -1;
 }
 
+void e3_2(const char* s, char t[LIMIT])
+{
+    int j = 0;
+    for(int i = 0; i < strlen(s); i++)
+    {
+        switch(s[i])
+        {
+            case '\n': t[j++] = '\\'; t[j++] = 'n'; break;
+            case '\t': t[j++] = '\\'; t[j++] = 't'; break;
+            default:
+                t[j++] = s[i];
+        }   
+    }
+}
+
+void e3_3(const char* s1, char s2[LIMIT])
+{
+    // read a-z as a...z 0-9 the same way, and leading and trailing '-' taken literally
+    int l = -1;
+    int r = -1;    
+    int idx = 0;
+    
+    for(int i = 0; i < strlen(s1); i++)
+    {
+        if((s1[i] == '-') && ((l < 0) && (r < 0))) s2[idx++] = s1[i];
+        else
+        {
+            if(l < 0) l = s1[i];
+            else if((r < 0) && (s1[i - 1] == '-')) r = s1[i];       
+            
+            if((l > 0) && (r > 0))
+            {
+                for(int j = l; j <= r; j++) s2[idx++] = (char)j; 
+                l = r = -1;
+            }
+        } 
+    }
+}
+
+#define abs(x) (x < 0) ? -(x) : (x)
+
+void e3_4(int i, char s[LIMIT])
+{
+    bool negative = i < 0;
+    int idx = 0;
+    i = abs(i);
+
+    for(int r = i % 10; i != 0;  (i/= 10), r = (i % 10)) s[idx++] = (r + '0');
+    if(negative) s[idx++] = '-';
+    s[idx] = '\0';
+    reverse(s);
+}
+
+void e3_5(int i, int b, char s[LIMIT])
+{
+    bool neagtive = i < 0;
+    int idx = 0;
+    i = abs(i);
+
+    for(int r = (i % b); (i > 0); (i /= b), r = (i % b)) s[idx++] = (r + '0');
+    if(neagtive) s[idx++] = '-';
+    s[idx] = '\0';
+    reverse(s);
+}
+
 int main()
 {
-    // e1_1();
-    // e1_2();
-    // e1_3(0, 300, 20);
-    // e1_4(0, 30, 1);
-    /* e1_5 is same as e1_3 and 4 just swap values of l and u params*/
-    // e1_6();
-    // e1_7();
-    // e1_8();
-    // e1_9();
-    // e1_10();
-    /* e1_11 was not really a coding question */
-    // e1_12();
-    // e1_13();
-    // e1_14();
-    /* e1_15 is just 1_3/4 */
-    // e1_16();
-    // e1_17(80);
-    // e1_18();
-    // e1_19();
-    // e1_20();
-    // e2_1();
-    // e2_2();
-    // e2_3("hexadecimal");
-    // e2_4("s1", "s2");
-    // e2_5("s1", "s2");
-    // e2_6(0, 0, 0, 0);
-    // e2_7(0, 0, 0);
-    // e2_8(0, 0);
-    // e2_8(0, 0);
-    // e2_9(0);
-    // e2_10("");
     return 0;
 }
