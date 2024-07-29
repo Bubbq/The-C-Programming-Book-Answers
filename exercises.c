@@ -1,10 +1,12 @@
 #include <math.h>
+#include <ctype.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>
 #include <stdbool.h>
 
-#define LIMIT 1024
+#define LIMIT 10
 
 // Commonly used functions //
 
@@ -497,7 +499,104 @@ void e3_5(int i, int b, char s[LIMIT])
     reverse(s);
 }
 
+void e3_6(int k, int p, char s[LIMIT])
+{
+    bool neagtive = k < 0;
+    int idx = 0;
+    k = abs(k);
+
+    for(int r = k % 10; k > 0; (k /= 10), r = (k % 10)) s[idx++] = (r + '0');
+
+    int rsp = ((p - idx) > 0) ? (p - idx) : 0;
+    for(; rsp > 0; rsp--) s[idx++] = '0';
+    if(neagtive) s[idx++] = '-';
+    reverse(s);
+    s[idx] = '\0';
+}
+
+// Chapter 4 - Functions and Program Structure
+
+int e4_1(const char* s, const char* t)
+{
+    int n = strlen(t) - 1;
+    
+    for(int i = (strlen(s) - 1); i >= 0; i--)
+    {
+        int c_match = 0;
+
+        for(int j = n, k = i; (j >= 0) && (k >= 0); j--, k--)
+        {
+            if(s[k] == t[j]) c_match++;
+        }
+
+        if(c_match == strlen(t)) return (i - n);
+    }
+
+    return -1;
+}
+
+float e4_2(const char* s)
+{
+    float value = 0.0f;
+    int i = 0;
+
+    // normal numbers
+    for(; i < strlen(s) && isdigit(s[i]); i++)
+    {
+        value *= 10;
+        value += (s[i] - '0');
+    }
+
+    // floating point
+    if(s[i] == '.')
+    {
+        i++;
+        for(float delta = 0.1f; (i < strlen(s)) && isdigit(s[i]); i++, (delta /= 10)) value += (delta * (s[i] - '0'));
+    }
+
+    // exponential
+    if((s[i] == 'e') || (s[i] == 'E'))
+    {
+        i++;
+        float exponent = 0.0f;
+        bool is_negative = (s[i] == '-');
+
+        if(is_negative) i++;
+
+        for(; (i < strlen(s)) && isdigit(s[i]); i++)
+        {
+            exponent *= 10;
+            exponent += (s[i] - '0');
+        }
+        if(is_negative) exponent *= -1;
+
+        value *= powf(10.0f, exponent);
+    }
+
+    return value;
+}
+
+int e4_12(const char* cstr, int n)
+{
+    if(n == strlen(cstr)) return 0;
+    else return (cstr[n] - '0') * pow(10, strlen(cstr) - n - 1) + e4_12(cstr, (n + 1));
+}
+
+void e4_13(char cstr[LIMIT], int l, int r)
+{
+    if((strlen(cstr) % 2 == 0) && l == (r + 1))
+        return;
+    else if((strlen(cstr) % 2 != 0) && (l == r))
+        return;
+    else
+    {
+        char t = cstr[l];
+        cstr[l] = cstr[r];
+        cstr[r] = t;
+        e4_13(cstr, (l + 1), (r - 1));
+    }
+}
+
 int main()
 {
-    return 0;
 }
